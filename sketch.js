@@ -182,7 +182,7 @@ function BallIsFinished() {
 }
 
 function CreatePegs(){
-  var x=random(490,530), y, col=0;
+  var x=515, y, col=0;
 
   // Create 9 columns of pegs
   for (; col<11; col++) {
