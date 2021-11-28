@@ -38,12 +38,13 @@ function preload()
 
 function setup() {
   createCanvas(640, 400);
+
   engine = Engine.create();
   world = engine.world;
 
-  bg = createSprite(320,200);
-  bg.addImage("background", bgImg);
-  bg.scale=2.3;
+  //bg = createSprite(320,200);
+  //bg.addImage("background", bgImg);
+  //bg.scale=2.3;
 
   bgMusic.setLoop(true);
   bgMusic.play();
@@ -66,9 +67,10 @@ function setup() {
   });
 }
 
+// (1) Run engine; (2) Update objects; (3) Draw objects
 function draw() {
   Engine.update(engine);
-  drawSprites();
+
 
   var posX;
   var posY;
@@ -125,6 +127,9 @@ function draw() {
     gameState=2;
   }
 
+  // All Display work happens here
+  background(bgImg);
+
   if(tries<5){
     bar.display();
     for (var i=0;i<pegs.length;i++){
@@ -173,6 +178,8 @@ function draw() {
     gameOver = createSprite(320,200);
     gameOver.addImage("gameover", gameOverImg);
   }
+
+  drawSprites();
 }
 
 // Called after 2 second timer is complete, after Ball is done.
