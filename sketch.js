@@ -8,6 +8,15 @@ const Composites = Matter.Composites;
 const Composite = Matter.Composite;
 const Events = Matter.Events;
 
+// game_state_new_ball: Drag ball around with mouse
+const game_state_new_ball = Symbol("new_ball");
+// game_state_in_play: Ball is falling
+const game_state_in_play = Symbol("in_play");
+// game_state_game_over: game Over after 5 tries
+const game_state_game_over = Symbol("game_over");
+// game_state_ball_waiting: Ball went offscreen or landed in cup, and is waiting 2 seconds to reset
+const game_state_ball_resting = Symbol("ball_waiting");
+
 let engine;
 let world;
 var bg,bgImg, bounceSound;
@@ -15,12 +24,7 @@ var peg;
 var pegs = [];
 var ball;
 var gameOver, gameOverImg;
-// GameState values
-// 0: Drag ball around with mouse
-// 1: Ball is falling
-// 3: Ball done falling and waiting 2 seconds
-// 2: Game Over after 5 tries
-var gameState=0;
+var gameState=game_state_new_ball;
 var tries=0;
 var bar;
 var bars= [];
@@ -75,7 +79,7 @@ function draw() {
   var posX;
   var posY;
 
-  if(gameState==0){
+  if(gameState==game_state_new_ball){
     if (mouseX >= 530) {
       posX = 530;
     } else
@@ -86,22 +90,22 @@ function draw() {
       posX = 100;
     }
     posY=60;
-  }else if(gameState==1 || gameState==3){
+  }else if(gameState==game_state_in_play || gameState==game_state_ball_resting){
     posX=ball.body.position.x;
     posY=ball.body.position.y;
   }
-  if(gameState==0 && keyDown("space") && mouseX<530 && mouseX>100){
-    gameState=1;
+  if(gameState==game_state_new_ball && keyDown("space") && mouseX<530 && mouseX>100){
+    gameState=game_state_in_play;
     ball=new Ball(mouseX,70,10);
   }
 
 
-  // Checking if ball is done, award score, starting 2 second timer, change gameState = 3
-  if(gameState==1){
+  // Checking if ball is done, award score, starting 2 second timer, change gameState = game_state_ball_resting
+  if(gameState==game_state_in_play){
     var pos=ball.body.position;
     
     if(pos.y>327) {
-      gameState = 3; // Ball must wait 2 seconds
+      gameState = game_state_ball_resting; // Ball must wait 2 seconds
       if(pos.x>113&& pos.x<190){
         score += 100;
       }
@@ -124,7 +128,7 @@ function draw() {
   }
 
   if (tries>4) {
-    gameState=2;
+    gameState=game_state_game_over;
   }
 
   // All Display work happens here
@@ -165,7 +169,7 @@ function draw() {
   }
 
 
-  if (gameState==1) {
+  if (gameState==game_state_in_play) {
     ball.display(posX, posY);
   } else {
     push();
@@ -174,7 +178,7 @@ function draw() {
     ellipse(posX,posY,10, 10);
     pop();
   }
-  if(gameState==2) {
+  if(gameState==game_state_game_over) {
     gameOver = createSprite(320,200);
     gameOver.addImage("gameover", gameOverImg);
   }
@@ -184,7 +188,7 @@ function draw() {
 
 // Called after 2 second timer is complete, after Ball is done.
 function BallIsFinished() {
-  gameState=0;
+  gameState=game_state_new_ball;
   ball.body.restitution = 1.0;
 }
 
