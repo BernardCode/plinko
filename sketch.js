@@ -46,17 +46,13 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  //bg = createSprite(320,200);
-  //bg.addImage("background", bgImg);
-  //bg.scale=2.3;
-
   bgMusic.setLoop(true);
   bgMusic.play();
   bgMusic.setVolume(0.05);
 
-
   CreatePegs();
   CreateBars();
+  ball = new Ball(100, 70, 10);
 
   document.addEventListener('mousemove', (event) => {
     //console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
@@ -73,11 +69,10 @@ function setup() {
 
 // (1) Run engine; (2) Update objects; (3) Draw objects
 function draw() {
-  Engine.update(engine);
-
-
   var posX;
   var posY;
+
+  Engine.update(engine);
 
   if(gameState==game_state_new_ball){
     if (mouseX >= 530) {
@@ -90,22 +85,21 @@ function draw() {
       posX = 100;
     }
     posY=60;
+    ball.setMousePosition(posX, posY);
   }else if(gameState==game_state_in_play || gameState==game_state_ball_resting){
     posX=ball.body.position.x;
     posY=ball.body.position.y;
   }
-  if(gameState==game_state_new_ball && keyDown("space") && mouseX<530 && mouseX>100){
-    gameState=game_state_in_play;
-    ball=new Ball(mouseX,70,10);
+  if(gameState==game_state_new_ball && keyDown("space")){
+    ChangeGameState(game_state_in_play);
   }
-
 
   // Checking if ball is done, award score, starting 2 second timer, change gameState = game_state_ball_resting
   if(gameState==game_state_in_play){
     var pos=ball.body.position;
     
     if(pos.y>327) {
-      gameState = game_state_ball_resting; // Ball must wait 2 seconds
+      ChangeGameState(game_state_ball_resting); // Ball must wait 2 seconds
       if(pos.x>113&& pos.x<190){
         score += 100;
       }
@@ -128,7 +122,7 @@ function draw() {
   }
 
   if (tries>4) {
-    gameState=game_state_game_over;
+    ChangeGameState(game_state_game_over)
   }
 
   // All Display work happens here
@@ -168,16 +162,10 @@ function draw() {
     text("Score:" + score,500,40);
   }
 
-
-  if (gameState==game_state_in_play) {
-    ball.display(posX, posY);
-  } else {
-    push();
-    ellipseMode(RADIUS);
-    fill(255, 61, 129);
-    ellipse(posX,posY,10, 10);
-    pop();
+  if (gameState!==game_state_game_over) {
+    ball.display();
   }
+
   if(gameState==game_state_game_over) {
     gameOver = createSprite(320,200);
     gameOver.addImage("gameover", gameOverImg);
@@ -186,10 +174,16 @@ function draw() {
   drawSprites();
 }
 
+// Tell the entire world the new gameState
+function ChangeGameState(newGameState) {
+  gameState = newGameState;
+  ball.setGameState(newGameState);
+}
+
 // Called after 2 second timer is complete, after Ball is done.
 function BallIsFinished() {
-  gameState=game_state_new_ball;
-  ball.body.restitution = 1.0;
+  ChangeGameState(game_state_new_ball);
+  ball.body.restitution = 0.87;
 }
 
 function CreatePegs(){
