@@ -128,52 +128,57 @@ function draw() {
   // All Display work happens here
   background(bgImg);
 
-  if(tries<5){
-    bar.display();
-    for (var i=0;i<pegs.length;i++){
-      pegs[i].display();
-    }
-    for (var i=0;i<bars.length;i++){
-      bars[i].display();
-    }
-
-    textSize(36);
-    strokeWeight(1);
-    stroke("cyan");
-    fill("cyan");
-    text ("PLINKO",255,50);
-    textSize(15);
-    fill("yellow");
-    text("+100",130,340);
-    textSize(15);
-    fill("yellow");
-    text("+500",220,340);
-    textSize(15);
-    fill("yellow");
-    text("+1000",300,340);
-    textSize(15);
-    fill("yellow");
-    text("+500",387,340);
-    textSize(15);
-    fill("yellow");
-    text("+100",470,340);
-    textSize(25);
-    fill("hotpink");
-    text("Score:" + score,500,40);
-  }
-
+  // Draw bars, pegs, text
   if (gameState!==game_state_game_over) {
+    DrawText();
+    DrawPegs();
+    DrawBars();
     ball.display();
-  }
-
-  if(gameState==game_state_game_over) {
+  } else {
     gameOver = createSprite(320,200);
     gameOver.addImage("gameover", gameOverImg);
+    drawSprites();
   }
-
-  drawSprites();
 }
 
+function DrawPegs() {
+  for (var i=0;i<pegs.length;i++){
+    pegs[i].display();
+  }
+}
+
+function DrawBars() {
+  bar.display();
+  for (var i=0;i<bars.length;i++){
+    bars[i].display();
+  }
+}
+
+function DrawText() {
+  textSize(36);
+  strokeWeight(1);
+  stroke("cyan");
+  fill("cyan");
+  text ("PLINKO",255,50);
+  textSize(15);
+  fill("yellow");
+  text("+100",130,340);
+  textSize(15);
+  fill("yellow");
+  text("+500",220,340);
+  textSize(15);
+  fill("yellow");
+  text("+1000",300,340);
+  textSize(15);
+  fill("yellow");
+  text("+500",387,340);
+  textSize(15);
+  fill("yellow");
+  text("+100",470,340);
+  textSize(25);
+  fill("hotpink");
+  text("Score:" + score,500,40);
+}
 // Tell the entire world the new gameState
 function ChangeGameState(newGameState) {
   gameState = newGameState;
