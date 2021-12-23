@@ -34,10 +34,10 @@ var points = 0;
 
 function preload()
 {
-  bgImg = loadImage("bg.png");
-  bgMusic = loadSound("background_music.mp3");
-  bounceSound = loadSound("bounce1.wav");
-  gameOverImg = loadImage("gameover.jpg");
+  bgImg = loadImage("Assets/bg.png");
+  bgMusic = loadSound("Assets/background_music.mp3");
+  bounceSound = loadSound("Assets/bounce1.wav");
+  gameOverImg = loadImage("Assets/gameover.jpg");
 }
 
 function setup() {
