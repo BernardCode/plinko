@@ -65,6 +65,8 @@ function setup() {
       
     })
   });
+
+  printBoard();
 }
 
 // (1) Run engine; (2) Update objects; (3) Draw objects
@@ -222,4 +224,19 @@ function CreateBars() {
     bars.push(bar);
   }
   
+}
+
+// Prints a note.txt file with background and pegs
+function printBoard() {
+  let words = 'apple bear cat dog';
+
+  fwriter = createWriter("board.txt");
+  fwriter.print("# This is a test board"); 
+  fwriter.print("BACKGROUND = Assets/bg.png"); 
+  fwriter.print(""); 
+  fwriter.print("PEGS"); 
+  for (var i=0;i<pegs.length;i++){
+    pegs[i].print(fwriter);
+  }
+  fwriter.close(); 
 }

@@ -13,8 +13,6 @@ class Peg {
     }
     display() {
         var pos = this.body.position;
-
-        
         push();
         fill(36, 120, 255);
         strokeWeight(1.0);
@@ -22,7 +20,9 @@ class Peg {
         ellipseMode(RADIUS);
         ellipse(pos.x,pos.y,this.radius);
         pop();
-        
+    }
 
+    print(fwriter) {
+        fwriter.print("0, "+ this.x +", " + this.y);
     }
 }
